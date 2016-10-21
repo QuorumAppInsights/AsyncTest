@@ -30,7 +30,7 @@ namespace AsyncTest
             var rand = new Random();
             for(int i = 0; i < 100; i++)
             {
-                await AsyncRequest(i, rand.Next(0, 10));
+                await AsyncRequest2(i, rand.Next(0, 10));
             }
             return "AsyncMethod1 Completed Successfully";
         }
@@ -41,8 +41,8 @@ namespace AsyncTest
             var requestList = new List<Task>();
             for(int i = 0; i < 100; i++)
             {
-                requestList.Add(AsyncRequest(i, rand.Next(0, 100)));
-            }            
+                requestList.Add(AsyncRequest2(i, rand.Next(0, 100)));
+            }
             await Task.WhenAll(requestList);
             return "AsyncMethod2 Completed Successfully";
         }
@@ -55,7 +55,7 @@ namespace AsyncTest
 
         public static async Task AsyncRequest2(int i, int timeDelay)
         {
-            await Task.Delay(0);            
+            await Task.Delay(0);
             
             long count = 0;
             var rand = new Random();
@@ -69,7 +69,7 @@ namespace AsyncTest
                 count %= 15;
             }
             watch.Stop();
-            
+
             Console.WriteLine(string.Format("Request {0}: {1} ms, max: {2}", i, watch.Elapsed, max));
         }
 
