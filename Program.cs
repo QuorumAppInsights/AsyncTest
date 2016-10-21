@@ -28,34 +28,50 @@ namespace AsyncTest
         public static async Task<string> AsyncMethod1()
         {
             var rand = new Random();
-
-            for(int i = 0; i < 10; i++)
+            for(int i = 0; i < 100; i++)
             {
-                await AsyncRequest(i, rand.Next(0, 3000));
+                await AsyncRequest(i, rand.Next(0, 10));
             }
-
             return "AsyncMethod1 Completed Successfully";
-        }
-
-        public static async Task AsyncRequest(int i, int timeDelay)
-        {
-            Console.WriteLine(string.Format("Request {0}: {1} ms", i, timeDelay));
-            await Task.Delay(timeDelay);
         }
 
         public static async Task<string> AsyncMethod2()
         {
             var rand = new Random();
             var requestList = new List<Task>();
-
-            for(int i = 0; i < 10; i++)
+            for(int i = 0; i < 100; i++)
             {
-                requestList.Add(AsyncRequest(i, rand.Next(0, 3000)));
-            }
-            
-            await Task.WhenAll(requestList.ToArray());
-
+                requestList.Add(AsyncRequest(i, rand.Next(0, 100)));
+            }            
+            await Task.WhenAll(requestList);
             return "AsyncMethod2 Completed Successfully";
         }
+
+        public static async Task AsyncRequest(int i, int timeDelay)
+        {
+            await Task.Delay(timeDelay);
+            Console.WriteLine(string.Format("Request {0}: {1} ms", i, timeDelay));
+        }
+
+        public static async Task AsyncRequest2(int i, int timeDelay)
+        {
+            await Task.Delay(0);            
+            
+            long count = 0;
+            var rand = new Random();
+            long max = (long)(99999*timeDelay);
+
+            var watch = new Stopwatch();
+            watch.Start();
+            for(long j = 0; j < max; j++)
+            {
+                count += j;
+                count %= 15;
+            }
+            watch.Stop();
+            
+            Console.WriteLine(string.Format("Request {0}: {1} ms, max: {2}", i, watch.Elapsed, max));
+        }
+
     }
 }
